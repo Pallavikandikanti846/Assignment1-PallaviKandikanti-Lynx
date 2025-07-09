@@ -3,6 +3,10 @@ extends common/layout
 block layout-content
   section#products
     h1 Products
+    .crud-buttons 
+          a(href="/addProduct") Add
+          a(href="/updateProduct") Edit 
+          a(href="/deleteProduct") Delete
     .product-list
       each product in products
         .product

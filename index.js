@@ -28,10 +28,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (request, res) => {
    console.log("Rendering index.pug now");
   let productList = await db.getProducts();
-  console.log("Products before init:", productList);
-  console.log("Products:", productList);
   let categoryList = await db.getCategories();
-  console.log("Categories before init:", categoryList);
   // Initialize if either collection is empty
   if (!productList.length) {
     await db.initializeProducts();

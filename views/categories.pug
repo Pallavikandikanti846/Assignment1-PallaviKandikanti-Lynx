@@ -3,8 +3,13 @@ extends common/layout
 block layout-content
   section#categories
     h1 Categories
+    .crud-buttons 
+          a(href="/addCategory") Add
+          a(href="/updateCategory") Edit 
+          a(href="/deleteCategory") Delete
     .category-list
       each category in categories
         .category
           h3= category.name
           p= category.description
+          
