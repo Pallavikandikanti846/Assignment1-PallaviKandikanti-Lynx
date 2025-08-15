@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import CategoriesSection from './components/CategoriesSection';
-import ProductsSection from './components/ProductsSection';
-import Footer from './components/Footer';
+import Header from './components/Header.js';
+import Hero from './components/Hero.js';
+import CategoriesSection from './components/CategoriesSection.js';
+import ProductsSection from './components/ProductsSection.js';
+import Footer from './components/Footer.js';
 import './App.css';
 
 function App() {

@@ -24,7 +24,7 @@ app.set("view cache", false);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
 
 
 //USE PAGE ROUTES FROM ROUTER(S)
