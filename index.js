@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
+import cors from 'cors';
 import * as url from "url";
 import { fileURLToPath } from "url";
 import db from "./modules/lynx/db.js"; //load db.js
