@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Lynx - Fashion Store" />
+    <title>Lynx - Fashion Store</title>
+    
+    <!-- React and ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Axios from CDN -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f8f9fa;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.3s;
+      }
+
+      .nav-links a:hover {
+        opacity: 0.8;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        text-align: center;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .categories-section {
+        margin-bottom: 3rem;
+      }
+
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .category-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      }
+
+      .products-section {
+        margin-bottom: 3rem;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .product-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #ccc;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .product-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        font-size: 1.2rem;
+        color: #666;
+      }
+
+      .error {
+        text-align: center;
+        padding: 2rem;
+        color: #e74c3c;
+        background: #fdf2f2;
+        border-radius: 10px;
+        margin: 2rem 0;
+      }
+
+      .footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #333;
+        text-align: center;
+      }
+
+      .App {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      @media (max-width: 768px) {
+        .nav {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .nav-links {
+          gap: 1rem;
+        }
+        
+        .hero h1 {
+          font-size: 2rem;
+        }
+        
+        .products-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+        
+        .hero p {
+          font-size: 1rem;
+        }
+        
+        .section-title {
+          font-size: 1.5rem;
+        }
+        
+        .categories-grid,
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      function App() {
+        const [products, setProducts] = useState([]);
+        const [categories, setCategories] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              setLoading(true);
+              const [productsResponse, categoriesResponse] = await Promise.all([
+                axios.get('https://assignment1-pallavikandikanti-lynx.onrender.com/api/products'),
+                axios.get('https://assignment1-pallavikandikanti-lynx.onrender.com/api/categories')
+              ]);
+              
+              setProducts(productsResponse.data);
+              setCategories(categoriesResponse.data);
+              setError(null);
+            } catch (err) {
+              console.error('Error fetching data:', err);
+              setError('Failed to load products and categories. Please try again later.');
+            } finally {
+              setLoading(false);
+            }
+          };
+
+          fetchData();
+        }, []);
+
+        if (loading) {
+          return (
+            <div className="App">
+              <Header />
+              <div className="loading">Loading products and categories...</div>
+            </div>
+          );
+        }
+
+        if (error) {
+          return (
+            <div className="App">
+              <Header />
+              <div className="error">{error}</div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="App">
+            <Header />
+            
+            <main>
+              <Hero />
+              
+              <div className="container">
+                <CategoriesSection categories={categories} />
+                <ProductsSection products={products} />
+              </div>
+            </main>
+            
+            <Footer />
+          </div>
+        );
+      }
+
+      function Header() {
+        return (
+          <header className="header">
+            <div className="container">
+              <nav className="nav">
+                <h1>Lynx</h1>
+                <ul className="nav-links">
+                  <li><a href="#home">Home</a></li>
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#products">Products</a></li>
+                  <li><a href="#categories">Categories</a></li>
+                </ul>
+              </nav>
+            </div>
+          </header>
+        );
+      }
+
+      function Hero() {
+        return (
+          <section className="hero">
+            <div className="container">
+              <h1>Shop the Hottest Summer Styles!</h1>
+              <p>Get 30% off all products — limited time only!</p>
+            </div>
+          </section>
+        );
+      }
+
+      function CategoriesSection({ categories }) {
+        return (
+          <section className="categories-section">
+            <h2 className="section-title">Categories</h2>
+            <div className="categories-grid">
+              {categories.map((category) => (
+                <div key={category.id} className="category-card">
+                  <h3>{category.name}</h3>
+                  <p>{category.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      }
+
+      function ProductsSection({ products }) {
+        return (
+          <section className="products-section">
+            <h2 className="section-title">Products</h2>
+            <div className="products-grid">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        );
+      }
+
+      function ProductCard({ product }) {
+        return (
+          <div className="product-card">
+            <div className="product-image">
+              {product.image ? (
+                <img src={product.image} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                '👕'
+              )}
+            </div>
+            <div className="product-info">
+              <h3 className="product-title">{product.title}</h3>
+              <p className="product-price">${product.price}</p>
+            </div>
+          </div>
+        );
+      }
+
+      function Footer() {
+        return (
+          <footer className="footer">
+            <div className="container">
+              <p>© Copyright Pallavi Kandikanti, 2025.</p>
+            </div>
+          </footer>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html>

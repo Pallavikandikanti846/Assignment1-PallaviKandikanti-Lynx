@@ -23,6 +23,9 @@ app.set("view cache", false);
 //set up folder for static files
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(express.urlencoded({ extended: true }));
+
+
 
 //USE PAGE ROUTES FROM ROUTER(S)
 app.get("/", async (request, res) => {
@@ -74,18 +77,30 @@ app.get("/products", async (request, response) => {
   response.render("products", { products: productList });
 });
 app.get("/addProduct", async (request, response) => {
-  //add a product
-  await db.addProduct(0,"Textured Asymmetrical Off Shoulder Top Plaid Cropped Button-Up Top", 12.5, "/images/addTop.png");
+  response.render("addProduct", { title: "Add Product" });
+});
+
+// Handle form submission
+app.post("/products/add", async (request, response) => {
+  const { id, title, price, image } = request.body;
+  await db.addProduct(id, title, price, image);
   response.redirect("/products");
 });
-app.get("/updateProduct", async (request, response) => {
-  //update something
-  await db.updateProductPrice("Los Angeles Graphic Mesh Jersey Dress", 20.00)
+
+app.get("/products/edit/:id", async (request, response) => {
+  const product = (await db.getProducts()).find(p => p.id == request.params.id);
+  if (!product) return response.status(404).send("Product not found");
+  response.render("editProduct", { title: "Edit Product", product });
+});
+
+app.post("/products/edit/:id", async (request, response) => {
+  const { title, price, image } = request.body;
+  await db.updateProductDetails(request.params.id, title, price, image);
   response.redirect("/products");
 });
-app.get("/deleteProduct", async (request, response) => {
-  //delete by id
-  await db.deleteProductsById(0);
+
+app.get("/products/delete/:id", async (request, response) => {
+  await db.deleteProductsById(request.params.id);
   response.redirect("/products");
 });
 
@@ -110,17 +125,26 @@ app.get("/categories", async (request, response) => {
 });
 app.get("/addCategory", async (request, response) => {
   //add a category
-  await db.addCategory(0,"Shoes", "A versatile range of footwear including sneakers, boots, and sandals designed for comfort, style, and every occasion.");
+    response.render("addCategory", { title: "Add category" });
+});
+app.post("/categories/add", async (request, response) => {
+  const { id, name,description } = request.body;
+  await db.addCategory(id, name, description);
   response.redirect("/categories");
 });
-app.get("/updateCategory", async (request, response) => {
-  //update something
-  await db.updateCategoryDescription("Tee's", "Casual and comfy t-shirts for all styles.")
+app.get("/categories/edit/:id", async (request, response) => {
+  const category = (await db.getCategories()).find(p => p.id == request.params.id);
+  if (!category) return response.status(404).send("Category not found");
+  response.render("editCategory", { title: "Edit Category", category });
+});
+
+app.post("/categories/edit/:id", async (request, response) => {
+  const { name, description } = request.body;
+  await db.updateCategoryDetails(request.params.id, name, description);
   response.redirect("/categories");
 });
-app.get("/deleteCategory", async (request, response) => {
-  //delete by id
-  await db.deleteCategoriesById(0);
+app.get("/categories/delete/:id", async (request, response) => {
+  await db.deleteCategoriesById(request.params.id);
   response.redirect("/categories");
 });
 
